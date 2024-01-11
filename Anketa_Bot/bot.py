@@ -95,7 +95,7 @@ def survey_command(message):
             )
 
     if users[user_id]['q_num'] >= len(SURVEY):
-        bot.register_next_step_handler(message, result_command(message, users))
+        bot.register_next_step_handler(message, result_command)
         bot.send_message(
             message.from_user.id,
             "Анкета закончилась.\n"
@@ -122,21 +122,45 @@ def survey_command(message):
         reply_markup=answers_keyboard
     )
     users[user_id]['q_num'] += 1
-
-def users_read():
-    return users
+def strategy_c(message):
+    try:
+        path = "information.json"
+        users = load_data(path)
+        number = users[message.from_user.id]['0']
+        print(number)
+        return number
+    except:
+        return 0
+def action_c(message):
+    try:
+        path = "information.json"
+        users = load_data(path)
+        number = users[message.from_user.id]['1']
+        print(number)
+        return number
+    except:
+        return 0
+def rpg_c(message):
+    try:
+        path = "information.json"
+        users = load_data(path)
+        print(message.from_user.id)
+        number = users[message.from_user.id]['2']
+        print(number)
+        return number
+    except:
+        return 0
 @bot.message_handler(commands=["result"])
 def result_command(message):
     user_id = message.from_user.id
     add_user(user_id)
 
-    users = users_read()
-    strategy = users[user_id]["0"]
-    action = users[user_id]["1"]
-    rpg = users[user_id]["2"]
+    strategy = strategy_c(message)
+    action = action_c(message)
+    rpg = rpg_c(message)
 
     if strategy == rpg and strategy == action:
-        win = "Все равны. Не знаю, как ты так сделал_а."
+        win = "Все равны. Ты возможно не прошёл анкету или у тебя отсутствует файл 'information.json'."
     elif rpg < action == strategy and strategy > rpg:
         win = "Ничья между стратегией и экшеном"
     elif action < strategy == rpg > action:
