@@ -4,7 +4,6 @@ import info
 from info import SURVEY
 from info import SCALES
 import json
-import os
 from config import TOKEN
 # Какой жанр игр тебе больше подходит?
 # Токен находится в файле config.py
@@ -30,10 +29,9 @@ def save_data(users: dict, path: str) -> None:
 
 def load_data(path: str) -> dict:
     try:
-        if os.path.exists(path):
-            with open(path, "r", encoding="utf-8") as f:
-                users = json.load(fp=f)
-            print(users)
+        with open(path, "r", encoding="utf-8") as f:
+            users = json.load(fp=f)
+        print(users)
     except:
         users = {}
     return users
@@ -124,30 +122,30 @@ def survey_command(message):
     users[user_id]['q_num'] += 1
 def strategy_c(message):
     try:
+        user_id = str(message.from_user.id)
         path = "information.json"
-        users = load_data(path)
-        number = users[message.from_user.id]['0']
-        print(number)
-        return number
+        user = load_data(path)
+        number_strategy = user[user_id]['0']
+        print(number_strategy)
+        return int(number_strategy)
     except:
         return 0
 def action_c(message):
     try:
+        user_id = str(message.from_user.id)
         path = "information.json"
-        users = load_data(path)
-        number = users[message.from_user.id]['1']
-        print(number)
-        return number
+        user = load_data(path)
+        number_action = user[user_id]['1']
+        return int(number_action)
     except:
         return 0
 def rpg_c(message):
     try:
+        user_id = str(message.from_user.id)
         path = "information.json"
-        users = load_data(path)
-        print(message.from_user.id)
-        number = users[message.from_user.id]['2']
-        print(number)
-        return number
+        user = load_data(path)
+        number_rpg = user[user_id]['2']
+        return int(number_rpg)
     except:
         return 0
 @bot.message_handler(commands=["result"])
